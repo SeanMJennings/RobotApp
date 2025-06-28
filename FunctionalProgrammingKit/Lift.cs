@@ -1,6 +1,6 @@
 ﻿namespace FunctionalProgrammingKit;
 
-public static class Elevate
+public static class Lift
 {
     public static ValueObject<U> Bind<T, U>(this ValueObject<T> value, Func<T, ValueObject<U>> func)
     {

@@ -20,7 +20,7 @@ public static partial class RobotAppShould
 
     private static Result<string[]> looking_for_file(string path)
     {
-        return path.GetFile();
+        return path.GetFileContents();
     }
 
     private static void file_is_not_found(Result<string[]> result)
@@ -49,7 +49,7 @@ public static partial class RobotAppShould
 
     private static Result<string[]> a_known_file_has_been_read()
     {
-        return a_known_file().GetFile();
+        return a_known_file().GetFileContents();
     }
 
     private static void file_is_found(Result<string[]> result)

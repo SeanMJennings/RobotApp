@@ -6,6 +6,7 @@ public class Result<T>
     public readonly T Data;
 
     public bool Success => !Errors.Any();
+    public bool Failed => !Success;
 
     public Result(T t) => (Errors, Data) = ([], t);
     public Result(IEnumerable<Error> errors) => (Errors, Data) = (errors, default!);

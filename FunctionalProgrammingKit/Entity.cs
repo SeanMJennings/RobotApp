@@ -33,6 +33,8 @@ public static class Entity
     public static Entity<T> Valid<T>(T v) => Entity<T>.Valid(v);
     public static Entity<T> Invalid<T>(Error[] errors) => Entity<T>.Invalid(errors);
     
+    public static string ErrorMessage<T>(this Entity<T> result) => string.Join(Environment.NewLine, result._errors.Select(e => e.Message));
+    
     public static Entity<T> SetValueObject<T, V>(this T entity, ValueObject<V> valueObject, Func<T, V, T> setter)
     {
         return Entity<T>.Valid(entity).SetValueObject(valueObject, setter);

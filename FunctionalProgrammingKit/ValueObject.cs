@@ -23,4 +23,5 @@ public static class ValueObject
 {
     public static ValueObject<T> Valid<T>(T v) => ValueObject<T>.CreateValid(v);
     public static ValueObject<T> Invalid<T>(Error[] errors) => ValueObject<T>.CreateInvalid(errors);
+    public static ValueObject<T> Invalid<T>(string error) => ValueObject<T>.CreateInvalid([error.ToErrorMessage()]);
 }

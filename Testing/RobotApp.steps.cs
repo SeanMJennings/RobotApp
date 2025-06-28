@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Common;
+using Domain.Entities;
 using Domain.Primitives;
 using FunctionalProgrammingKit;
 
@@ -47,7 +48,7 @@ public static partial class RobotAppShould
 
     private static void file_is_found(Result<string[]> result)
     {
-        assert_success(result, File.ReadAllLines(SampleFile));
+        assert_success(result, FileExtensions.ReadAllLinesThatAreNotEmpty(SampleFile));
     }
     
     private static void assert_success<T>(this Result<T> result, T expected)

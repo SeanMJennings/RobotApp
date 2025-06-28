@@ -1,6 +1,6 @@
 ﻿using FunctionalProgrammingKit;
 
-namespace Testing.TestingLanguage;
+namespace Testing;
 
 internal static class TestingLanguage
 {

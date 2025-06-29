@@ -11,7 +11,12 @@ public static partial class RobotAppShould
     private const string UnknownFile = "unknown_file.txt";
     private const string SampleFile = "Sample.txt";
     private const string InvalidGridSizeText = "GRID 43";
-    private const string InvalidLocationText = "1 1 Z";
+    private const string InvalidLocationText = """
+                                               GRID 4X3
+                                               1 1
+                                               RFR
+                                               1 0 W
+                                               """;
     
     private static string a_non_existent_file()
     {
@@ -44,7 +49,7 @@ public static partial class RobotAppShould
 
     private static Result<string[]> a_known_file_with_invalid_starting_location_has_been_read()
     {
-        return new Result<string[]>([InvalidLocationText]);
+        return new Result<string[]>(InvalidLocationText.Split('\n'));
     }
 
     private static Result<string[]> a_known_file_has_been_read()
@@ -94,7 +99,7 @@ public static partial class RobotAppShould
         Assert.Multiple(() =>
         {
             Assert.That(gameState.IsValid, Is.EqualTo(false));
-            Assert.That(gameState.ErrorMessage(), Is.EqualTo("Starting location is invalid. Expected format: <x> <y> <direction where direction is N, E, S, W>"));
+            Assert.That(gameState.ErrorMessage(), Is.EqualTo("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>"));
         });
     }
 }

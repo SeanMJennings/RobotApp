@@ -6,7 +6,6 @@ public record Entity<T>
     private readonly T _value;
 
     public bool IsValid => !_errors.Any();
-
     private Entity(T t) => (_errors, _value) = ([], t ?? throw new ArgumentNullException(nameof(t)));
     private Entity(IEnumerable<Error> errors) => (_errors, _value) = (errors, default!);
 

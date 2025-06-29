@@ -55,14 +55,17 @@ public static class Parser
     private static ValueObject<RobotInstructions> ParseRobotInstructions(string[] fileContents)
     {
         var cleanedStartingLocation = fileContents[0].CleanFileLine();
-        var cleanedInstructions = fileContents[1].CleanFileLine();
-        var cleanedEndLocation = fileContents[2].CleanFileLine();
         if (!Regex.IsMatch(cleanedStartingLocation, ValidLocationPattern))
             return Invalid<RobotInstructions>("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>");
+        
+        var cleanedInstructions = fileContents[1].CleanFileLine();
         if (!Regex.IsMatch(cleanedInstructions, ValidInstructionsPattern))
             return Invalid<RobotInstructions>("Instructions are invalid. Expected format: <L|R|F> (e.g., LRF)");
+        
+        var cleanedEndLocation = fileContents[2].CleanFileLine();
         if (!Regex.IsMatch(cleanedEndLocation, ValidLocationPattern))
             return Invalid<RobotInstructions>("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>");
+        
         var startingRobotState = RobotState.Create(
             Location.Create(uint.Parse([cleanedStartingLocation[0]]), uint.Parse([cleanedStartingLocation[1]])),
             cleanedStartingLocation[2].ToDirection());

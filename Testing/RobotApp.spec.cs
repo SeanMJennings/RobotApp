@@ -31,4 +31,16 @@ public static partial class RobotAppShould
     {
         Given(a_known_file_with_invalid_starting_location_has_been_read).WhenTransforming(parsing).Then(starting_location_is_invalid);
     }
+    
+    [Test]
+    public static void RejectInvalidMovements()
+    {
+        Given(a_known_file_with_invalid_movements_has_been_read).WhenTransforming(parsing).Then(movements_are_invalid);
+    }
+    
+    [Test]
+    public static void RejectInvalidEndingLocation()
+    {
+        Given(a_known_file_with_invalid_ending_location_has_been_read).WhenTransforming(parsing).Then(ending_location_is_invalid);
+    }
 }

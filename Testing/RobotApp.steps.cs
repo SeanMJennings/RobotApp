@@ -16,6 +16,18 @@ public static partial class RobotAppShould
                                                1 1
                                                RFR
                                                1 0 W
+                                               """;    
+    private const string InvalidMovementsText = """
+                                               GRID 4X2
+                                               1 1 E
+                                               RFRT
+                                               1 0 W
+                                               """;    
+    private const string InvalidEndingLocationText = """
+                                               GRID 4X2
+                                               1 1 E
+                                               RFR
+                                               1 W
                                                """;
     
     private static string a_non_existent_file()
@@ -25,7 +37,7 @@ public static partial class RobotAppShould
 
     private static Result<string[]> looking_for_file(string path)
     {
-        return path.GetFileContents();
+        return path.GetCleanedFileContents();
     }
 
     private static void file_is_not_found(Result<string[]> result)
@@ -51,10 +63,20 @@ public static partial class RobotAppShould
     {
         return new Result<string[]>(InvalidLocationText.Split('\n'));
     }
+    
+    private static Result<string[]> a_known_file_with_invalid_movements_has_been_read()
+    {
+        return new Result<string[]>(InvalidMovementsText.Split('\n'));
+    }    
+    
+    private static Result<string[]> a_known_file_with_invalid_ending_location_has_been_read()
+    {
+        return new Result<string[]>(InvalidEndingLocationText.Split('\n'));
+    }
 
     private static Result<string[]> a_known_file_has_been_read()
     {
-        return a_known_file().GetFileContents();
+        return a_known_file().GetCleanedFileContents();
     }
 
     private static void file_is_found(Result<string[]> result)
@@ -102,4 +124,22 @@ public static partial class RobotAppShould
             Assert.That(gameState.ErrorMessage(), Is.EqualTo("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>"));
         });
     }
+    
+    private static void movements_are_invalid(Entity<RobotApplicationState> gameState)
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(gameState.IsValid, Is.EqualTo(false));
+            Assert.That(gameState.ErrorMessage(), Is.EqualTo("Instructions are invalid. Expected format: <L|R|F> (e.g., LRF)"));
+        });
+    }
+    
+    private static void ending_location_is_invalid(Entity<RobotApplicationState> gameState)
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(gameState.IsValid, Is.EqualTo(false));
+            Assert.That(gameState.ErrorMessage(), Is.EqualTo("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>"));
+        });
+    }  
 }

@@ -23,7 +23,7 @@ public static class Parser
 
     private static ValueObject<GridDimensions> ParseGridDimensions(string[] fileContents)
     {
-        var cleanedGridSize = fileContents[0].Replace(" ", string.Empty).ToUpperInvariant().Split([GridKeyword], StringSplitOptions.None)[1].Trim();
+        var cleanedGridSize = fileContents[0].CleanFileLine().Split([GridKeyword], StringSplitOptions.None)[1].Trim();
         
         if (!Regex.IsMatch(cleanedGridSize, ValidGridDimensionsPattern)) return Invalid<GridDimensions>("Grid size is invalid. Expected format: GRID <width>x<height>");
 
@@ -54,9 +54,9 @@ public static class Parser
     
     private static ValueObject<RobotInstructions> ParseRobotInstructions(string[] fileContents)
     {
-        var cleanedStartingLocation = fileContents[0].Replace(" ", string.Empty).ToUpperInvariant();
-        var cleanedInstructions = fileContents[1].Replace(" ", string.Empty).ToUpperInvariant();
-        var cleanedEndLocation = fileContents[2].Replace(" ", string.Empty).ToUpperInvariant();
+        var cleanedStartingLocation = fileContents[0].CleanFileLine();
+        var cleanedInstructions = fileContents[1].CleanFileLine();
+        var cleanedEndLocation = fileContents[2].CleanFileLine();
         if (!Regex.IsMatch(cleanedStartingLocation, ValidLocationPattern))
             return Invalid<RobotInstructions>("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>");
         if (!Regex.IsMatch(cleanedInstructions, ValidInstructionsPattern))
@@ -71,5 +71,13 @@ public static class Parser
             Location.Create(uint.Parse([cleanedEndLocation[0]]), uint.Parse([cleanedEndLocation[1]])),
             cleanedEndLocation[2].ToDirection());
         return Valid(RobotInstructions.Create(startingRobotState, finalRobotState, instructions));
+    }
+}
+
+public static class FileContentExtensions
+{
+    public static string CleanFileLine(this string line)
+    {
+        return line.Replace(" ", string.Empty).Replace("\r", string.Empty).ToUpperInvariant();
     }
 }

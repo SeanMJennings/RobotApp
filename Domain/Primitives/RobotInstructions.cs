@@ -2,9 +2,9 @@
 
 public record RobotInstructions
 {
-    public RobotState StartingRobotState { get; init; }
-    public RobotState FinalRobotState { get; init; }
-    public Movement[] Instructions { get; init; }
+    public required RobotState StartingRobotState { get; init; }
+    public required RobotState FinalRobotState { get; init; }
+    public required Movement[] Instructions { get; init; }
 
     public static RobotInstructions Create(RobotState startingRobotState, RobotState finalRobotState, Movement[] instructions)
     {
@@ -19,13 +19,23 @@ public record RobotInstructions
 
 public static class RobotInstructionsBehaviour
 {
-    public static RobotInstructionsResult ExecuteRobotInstructions(this RobotInstructions robotInstructions)
+    public static RobotInstructionsResult ExecuteRobotInstructions(this RobotInstructions robotInstructions, GridDimensions gridDimensions)
     {
-        var currentState = robotInstructions.Instructions.Aggregate(robotInstructions.StartingRobotState, (current, instruction) => current.Move(instruction));
-        if (currentState.Location != robotInstructions.FinalRobotState.Location || currentState.Direction != robotInstructions.FinalRobotState.Direction)
+        var currentState = robotInstructions.StartingRobotState;
+        foreach (var movement in robotInstructions.Instructions)
         {
-            return RobotInstructionsResult.Create(RobotInstructionsResultType.Failure, currentState);
+            var (newState, outOfBounds) = currentState.Move(movement, gridDimensions);
+            if (outOfBounds)
+            {
+                return RobotInstructionsResult.Create(RobotInstructionsResultType.OutOfBounds, currentState);
+            }
+            currentState = newState;
         }
-        return RobotInstructionsResult.Create(RobotInstructionsResultType.Success, currentState);
+        return RobotInstructionsResult.Create(LastStateDoesNotMatchExpectedFinalState(robotInstructions, currentState) ? RobotInstructionsResultType.Failure : RobotInstructionsResultType.Success, currentState);
+    }
+
+    private static bool LastStateDoesNotMatchExpectedFinalState(RobotInstructions robotInstructions, RobotState currentState)
+    {
+        return currentState.Location != robotInstructions.FinalRobotState.Location || currentState.Direction != robotInstructions.FinalRobotState.Direction;
     }
 }

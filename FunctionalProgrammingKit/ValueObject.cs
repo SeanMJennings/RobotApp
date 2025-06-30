@@ -2,9 +2,9 @@
 
 public readonly struct ValueObject<T>
 {
-    public bool IsValid => _errors.Length == 0;
-    internal readonly T? _value;
-    internal readonly Error[] _errors;
+    private bool IsValid => _errors.Length == 0;
+    private readonly T? _value;
+    private readonly Error[] _errors;
     private ValueObject(T v, Error[] errors) => (_value, _errors) = (v, errors);
     internal static ValueObject<T> CreateValid(T v) => new(v, []);
     internal static ValueObject<T> CreateInvalid(Error[] errors) => new(default!, errors);
@@ -12,10 +12,6 @@ public readonly struct ValueObject<T>
     {
         return IsValid ? Valid(_value!) : Invalid(_errors.ToArray());
     }
-    public Result<T> Match()
-    {
-        return IsValid ? ValidResult(_value!) : InvalidResult<T>(_errors.ToArray());
-    } 
     public static implicit operator ValueObject<T>(Error error) => CreateInvalid([error]);
 }
 

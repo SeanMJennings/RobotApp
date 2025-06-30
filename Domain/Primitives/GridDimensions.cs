@@ -1,6 +1,4 @@
-﻿using FunctionalProgrammingKit;
-
-namespace Domain.Primitives;
+﻿namespace Domain.Primitives;
 
 public readonly record struct GridDimensions(uint Width, uint Height)
 {

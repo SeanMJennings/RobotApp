@@ -33,15 +33,15 @@ public static class RobotApplicationStateBehaviour
 {
     public static Result<RobotInstructionsResult[]> ExecuteRobotInstructions(this Entity<RobotApplicationState> robotApplicationState)
     {
-        return robotApplicationState.MatchResult<RobotInstructionsResult[]>(state => ExecuteRobotInstructions(state.InstructionsForRobots, 0));
+        return robotApplicationState.MatchResult<RobotInstructionsResult[]>(state => ExecuteRobotInstructions(state.InstructionsForRobots, 0, state.GridDimensions));
     }
     
-    private static RobotInstructionsResult[] ExecuteRobotInstructions(RobotInstructions[] instructions, int index)
+    private static RobotInstructionsResult[] ExecuteRobotInstructions(RobotInstructions[] instructions, int index, GridDimensions gridDimensions)
     {
         if (index >= instructions.Length) return [];
 
-        var robotInstructions = instructions[index].ExecuteRobotInstructions();
-        var remainingInstructions = ExecuteRobotInstructions(instructions, index + 1);
+        var robotInstructions = instructions[index].ExecuteRobotInstructions(gridDimensions);
+        var remainingInstructions = ExecuteRobotInstructions(instructions, index + 1, gridDimensions);
         var results = new RobotInstructionsResult[remainingInstructions.Length + 1];
         results[0] = robotInstructions;
         remainingInstructions.CopyTo(results, 1);

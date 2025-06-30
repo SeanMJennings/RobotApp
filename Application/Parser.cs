@@ -45,10 +45,8 @@ public static class Parser
     {
         if (index >= fileContents.Length) return Valid<RobotInstructions[]>([]);
 
-        List<string> currentBatch = [];
-        for (var i = index; i < index + 3 && i < fileContents.Length; i++) currentBatch.Add(fileContents[i]);
-        
-        var robotInstructions = ParseRobotInstructions(currentBatch.ToArray());
+        var currentBatch = fileContents.Skip(index + 1).Take(3).ToArray();
+        var robotInstructions = ParseRobotInstructions(currentBatch);
         var remainingInstructions = ParseAllRobotInstructions(fileContents, index + 3);
         
         return robotInstructions.Match(
@@ -119,8 +117,7 @@ public static class Parser
     }    
     private static bool LineIsLocationOrInstruction(string cleanedObstacle)
     {
-        return Regex.IsMatch(cleanedObstacle, ValidLocationPattern)
-               || Regex.IsMatch(cleanedObstacle, ValidInstructionsPattern);
+        return Regex.IsMatch(cleanedObstacle, ValidLocationPattern) || Regex.IsMatch(cleanedObstacle, ValidInstructionsPattern);
     }
     
     private static bool LineIsObstacle(string cleanedObstacle) => Regex.IsMatch(cleanedObstacle, ValidObstaclePattern);

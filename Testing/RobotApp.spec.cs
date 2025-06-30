@@ -73,4 +73,20 @@ public static partial class RobotAppShould
             .WhenTransforming(calculating_instruction_results_for_sample_file)
             .Then(out_of_bounds_is_calculated_for_third_robot_in_sample);
     }
+
+    [Test]
+    public static void RejectObstaclesNotDeclaredBeforeInstructions()
+    {
+        Given(a_known_file_with_obstacles_declared_late_has_been_read)
+            .WhenTransforming(parsing)
+            .Then(obstacles_are_invalid_as_they_are_late);
+    }
+    
+    [Test]
+    public static void CalculateCrashForInstructionsThatCollideWithObstacles()
+    {
+        Given(a_known_file_with_a_collision_has_been_read)
+            .WhenTransforming(calculating_instruction_results_for_sample_file)
+            .Then(crash_is_calculated);
+    }
 }

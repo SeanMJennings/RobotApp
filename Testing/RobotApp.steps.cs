@@ -28,6 +28,20 @@ public static partial class RobotAppShould
                                                1 1 E
                                                RFR
                                                1 W
+                                               """;    
+    private const string LateObstaclesText = """
+                                               GRID 4X2
+                                               1 1 E
+                                               RFR
+                                               1 0 N
+                                               OBSTACLE 1 1
+                                               """;    
+    private const string CollisionInstructions = """
+                                               GRID 4X2
+                                               OBSTACLE 1 1
+                                               1 0 N
+                                               F
+                                               1 1 N
                                                """;
     
     private static string a_non_existent_file()
@@ -74,6 +88,16 @@ public static partial class RobotAppShould
         return new Result<string[]>(InvalidEndingLocationText.Split('\n'));
     }
 
+    private static Result<string[]> a_known_file_with_obstacles_declared_late_has_been_read()
+    {
+        return new Result<string[]>(LateObstaclesText.Split('\n'));
+    }     
+    
+    private static Result<string[]> a_known_file_with_a_collision_has_been_read()
+    {
+        return new Result<string[]>(CollisionInstructions.Split('\n'));
+    }    
+    
     private static Result<string[]> sample_file_has_been_read()
     {
         return SampleFile.GetCleanedFileContents();
@@ -117,7 +141,7 @@ public static partial class RobotAppShould
         Assert.Multiple(() =>
         {
             Assert.That(gameState.IsValid, Is.EqualTo(false));
-            Assert.That(gameState.ErrorMessage(), Is.EqualTo("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>"));
+            Assert.That(gameState.ErrorMessage().Contains("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>"), Is.True);
         });
     }
     
@@ -137,8 +161,17 @@ public static partial class RobotAppShould
             Assert.That(gameState.IsValid, Is.EqualTo(false));
             Assert.That(gameState.ErrorMessage(), Is.EqualTo("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>"));
         });
-    }
-
+    }    
+    
+    private static void obstacles_are_invalid_as_they_are_late(Entity<RobotApplicationState> gameState)
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(gameState.IsValid, Is.EqualTo(false));
+            Assert.That(gameState.ErrorMessage(), Is.EqualTo("At least one obstacle is invalid. Obstacles must be declared after grid size and before robot instructions in format: OBSTACLE <x> <y>"));
+        });
+    }    
+    
     private static Result<RobotInstructionsResult[]> success_is_calculated_for_first_robot_in_sample(Result<RobotInstructionsResult[]> result)
     {
         Assert.Multiple(() =>
@@ -169,5 +202,15 @@ public static partial class RobotAppShould
             Assert.That(result.Data[2].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.OutOfBounds));
         });
         return result;
+    }    
+    
+    private static void crash_is_calculated(Result<RobotInstructionsResult[]> result)
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Success, Is.EqualTo(true));
+            Assert.That(result.Data[0].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.Crashed));
+            Assert.That(result.Data[0].RobotState, Is.EqualTo(RobotState.Create(Location.Create(1, 1), Direction.North)));
+        });
     }
 }

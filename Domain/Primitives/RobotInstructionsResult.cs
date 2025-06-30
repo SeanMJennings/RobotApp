@@ -13,5 +13,6 @@ public enum RobotInstructionsResultType
 {
     Failure,
     Success,
-    OutOfBounds
+    OutOfBounds,
+    Crashed
 }

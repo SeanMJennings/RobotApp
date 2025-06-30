@@ -2,7 +2,7 @@
 
 public readonly struct ValueObject<T>
 {
-    private bool IsValid => _errors.Length == 0;
+    public bool IsValid => _errors.Length == 0;
     private readonly T? _value;
     private readonly Error[] _errors;
     private ValueObject(T v, Error[] errors) => (_value, _errors) = (v, errors);

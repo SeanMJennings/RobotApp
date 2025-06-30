@@ -13,17 +13,17 @@ public record RobotState
 
 public static class RobotStateBehaviour
 {
-    public static (RobotState RobotState, bool OutOfBounds) Move(this RobotState robotState, Movement movement, GridDimensions gridDimensions)
+    public static (RobotState RobotState, bool OutOfBounds, bool crashed) Move(this RobotState robotState, Movement movement, GridDimensions gridDimensions, Obstacle[] obstacles)
     {
         return movement switch
         {
-            Movement.Forward => robotState.Forward(gridDimensions),
-            Movement.Right => robotState.Right(gridDimensions),
-            Movement.Left => robotState.Left(gridDimensions),
+            Movement.Forward => robotState.Forward(gridDimensions, obstacles),
+            Movement.Right => robotState.Right(gridDimensions, obstacles),
+            Movement.Left => robotState.Left(gridDimensions, obstacles),
         };
     }
 
-    private static (RobotState RobotState, bool OutOfBounds) Forward(this RobotState robotState, GridDimensions gridDimensions)
+    private static (RobotState RobotState, bool OutOfBounds, bool crashed) Forward(this RobotState robotState, GridDimensions gridDimensions, Obstacle[] obstacles)
     {
         var newRobotState = robotState.Direction switch
         {
@@ -46,15 +46,22 @@ public static class RobotStateBehaviour
             _ => robotState
         };
         var outOfBounds = IsRobotOutOfBounds(gridDimensions, newRobotState);
-        return outOfBounds ? (newRobotState, true) : (newRobotState, false);
+        if (outOfBounds) return (newRobotState, true, false);
+        var hasRobotCrashed = HasRobotCrashedIntoObstacle(newRobotState, obstacles);
+        return hasRobotCrashed ? (newRobotState, false, true) : (newRobotState, false, false);
     }
 
     private static bool IsRobotOutOfBounds(GridDimensions gridDimensions, RobotState newRobotState)
     {
-        return newRobotState.Location.Horizontal >= gridDimensions.Width || newRobotState.Location.Vertical >= gridDimensions.Height;
+        return newRobotState.Location.Horizontal > gridDimensions.Width - 1 || newRobotState.Location.Vertical > gridDimensions.Height - 1;
+    }
+    
+    private static bool HasRobotCrashedIntoObstacle(RobotState newRobotState, IEnumerable<Obstacle> obstacles)
+    {
+        return obstacles.Any(obstacle => obstacle.Location == newRobotState.Location);
     }
 
-    private static (RobotState RobotState, bool OutOfBounds) Right(this RobotState robotState, GridDimensions gridDimensions)
+    private static (RobotState RobotState, bool OutOfBounds, bool crashed) Right(this RobotState robotState, GridDimensions gridDimensions, Obstacle[] obstacles)
     {
         var newRobotState =  robotState.Direction switch
         {
@@ -65,10 +72,12 @@ public static class RobotStateBehaviour
             _ => robotState
         };
         var outOfBounds = IsRobotOutOfBounds(gridDimensions, newRobotState);
-        return outOfBounds ? (newRobotState, true) : (newRobotState, false);
+        if (outOfBounds) return (newRobotState, true, false);
+        var hasRobotCrashed = HasRobotCrashedIntoObstacle(newRobotState, obstacles);
+        return hasRobotCrashed ? (newRobotState, false, true) : (newRobotState, false, false);
     }
     
-    private static (RobotState RobotState, bool OutOfBounds) Left(this RobotState robotState, GridDimensions gridDimensions)
+    private static (RobotState RobotState, bool OutOfBounds, bool crashed) Left(this RobotState robotState, GridDimensions gridDimensions, Obstacle[] obstacles)
     {
         var newRobotState =  robotState.Direction switch
         {
@@ -79,6 +88,8 @@ public static class RobotStateBehaviour
             _ => robotState
         };
         var outOfBounds = IsRobotOutOfBounds(gridDimensions, newRobotState);
-        return outOfBounds ? (newRobotState, true) : (newRobotState, false);
+        if (outOfBounds) return (newRobotState, true, false);
+        var hasRobotCrashed = HasRobotCrashedIntoObstacle(newRobotState, obstacles);
+        return hasRobotCrashed ? (newRobotState, false, true) : (newRobotState, false, false);
     }
 }

@@ -45,7 +45,7 @@ public static class RobotStateBehaviour
                 Location = robotState.Location with { Horizontal = robotState.Location.Horizontal - 1 }
             },
             _ => robotState
-        })!;
+        });
     }
     
     private static RobotState Right(this RobotState robotState)
@@ -57,7 +57,7 @@ public static class RobotStateBehaviour
             Direction.South => robotState with { Direction = Direction.West },
             Direction.West => robotState with { Direction = Direction.North },
             _ => robotState
-        })!;
+        });
     }
     
     private static RobotState Left(this RobotState robotState)
@@ -69,6 +69,6 @@ public static class RobotStateBehaviour
             Direction.South => robotState with { Direction = Direction.East },
             Direction.West => robotState with { Direction = Direction.South },
             _ => robotState
-        })!;
+        });
     }
 }

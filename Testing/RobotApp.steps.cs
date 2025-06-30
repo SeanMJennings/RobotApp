@@ -158,4 +158,15 @@ public static partial class RobotAppShould
             Assert.That(result.Data[0].RobotState, Is.EqualTo(RobotState.Create(Location.Create(1, 0), Direction.West)));
         });
     }
+    
+    private static void failure_is_calculated_for_second_robot_in_first_sample(Result<RobotInstructionsResult[]> result)
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Success, Is.EqualTo(true));
+            Assert.That(result.Data, Is.Not.Null);
+            Assert.That(result.Data[1].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.Failure));
+            Assert.That(result.Data[1].RobotState, Is.EqualTo(RobotState.Create(Location.Create(0, 0), Direction.West)));
+        });
+    }
 }

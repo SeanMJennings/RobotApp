@@ -35,6 +35,7 @@ public static class Entity
 {
     public static Entity<T> Valid<T>(T v) => Entity<T>.Valid(v);
     public static Entity<T> Invalid<T>(Error[] errors) => Entity<T>.Invalid(errors);
+    public static Entity<T> Invalid<T>(string error) => Entity<T>.Invalid([new Error(error)]);
     
     public static string ErrorMessage<T>(this Entity<T> result) => string.Join(Environment.NewLine, result._errors.Select(e => e.Message));
 
@@ -45,5 +46,14 @@ public static class Entity
             Valid: v => entity.Match(
                                 Valid: t => Entity<T>.Valid(setter(t, v)),
                                 Invalid: e => entity));
+    }
+
+    public static Entity<T> SetEntity<T, E>(this Entity<T> parentEntity, Entity<E> entity, Func<T, E, T> setter)
+    {
+        return entity.Match(
+            Invalid: e => Entity<T>.Invalid(e.Concat(parentEntity._errors)),
+            Valid: v => parentEntity.Match(
+                Valid: t => Entity<T>.Valid(setter(t, v)),
+                Invalid: e => parentEntity));
     }
 }

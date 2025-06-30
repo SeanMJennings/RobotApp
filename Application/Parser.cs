@@ -20,7 +20,7 @@ public static class Parser
         if (fileContents.Failed) return Entity<RobotApplicationState>.Invalid(fileContents.Errors);
         var gridDimensions = ParseGridDimensions(fileContents.Data);
         var obstacles = ParseObstacles(fileContents.Data, 1);
-        if (InvalidObstaclesArePresent(obstacles)) return RobotApplicationState.Create(gridDimensions, Invalid<RobotInstructions[]>([]), obstacles);
+        if (InvalidObstaclesArePresent(obstacles)) return RobotApplicationState.Create(gridDimensions, Entity<RobotInstructions[]>.Invalid([]), obstacles);
         var numberOfObstacles = obstacles.Match(Invalid: _ => 0, Valid: obs => obs.Length);
         var instructions = ParseAllRobotInstructions(fileContents.Data, 1 + numberOfObstacles);
         return RobotApplicationState.Create(gridDimensions, instructions, obstacles);
@@ -41,38 +41,38 @@ public static class Parser
         return Valid(GridDimensions.Create(uint.Parse(dimensions[0]), uint.Parse(dimensions[1])));
     }
 
-    private static ValueObject<RobotInstructions[]> ParseAllRobotInstructions(string[] fileContents, int index)
+    private static Entity<RobotInstructions[]> ParseAllRobotInstructions(string[] fileContents, int index)
     {
-        if (index >= fileContents.Length) return Valid<RobotInstructions[]>([]);
+        if (index >= fileContents.Length) return Entity<RobotInstructions[]>.Valid([]);
 
-        var currentBatch = fileContents.Skip(index + 1).Take(3).ToArray();
+        var currentBatch = fileContents.Skip(index).Take(3).ToArray();
         var robotInstructions = ParseRobotInstructions(currentBatch);
         var remainingInstructions = ParseAllRobotInstructions(fileContents, index + 3);
         
         return robotInstructions.Match(
-            Invalid: Invalid<RobotInstructions[]>,
+            Invalid: Entity.Invalid<RobotInstructions[]>,
             Valid: instructions =>
             {
                 var nextInstructions = remainingInstructions.Match(
                     Invalid: _ => [],
                     Valid: next => next);
-                return Valid(new[] { instructions }.Concat(nextInstructions).ToArray());
+                return Entity.Valid(new[] { instructions }.Concat(nextInstructions).ToArray());
             });
     }
     
-    private static ValueObject<RobotInstructions> ParseRobotInstructions(string[] fileContents)
+    private static Entity<RobotInstructions> ParseRobotInstructions(string[] fileContents)
     {
         var cleanedStartingLocation = fileContents[0].CleanFileLine();
         if (!Regex.IsMatch(cleanedStartingLocation, ValidLocationPattern))
-            return Invalid<RobotInstructions>("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>");
+            return Entity.Invalid<RobotInstructions>("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>");
         
         var cleanedInstructions = fileContents[1].CleanFileLine();
         if (!Regex.IsMatch(cleanedInstructions, ValidInstructionsPattern))
-            return Invalid<RobotInstructions>("Instructions are invalid. Expected format: <L|R|F> (e.g., LRF)");
+            return Entity.Invalid<RobotInstructions>("Instructions are invalid. Expected format: <L|R|F> (e.g., LRF)");
         
         var cleanedEndLocation = fileContents[2].CleanFileLine();
         if (!Regex.IsMatch(cleanedEndLocation, ValidLocationPattern))
-            return Invalid<RobotInstructions>("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>");
+            return Entity.Invalid<RobotInstructions>("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>");
         
         var startingRobotState = RobotState.Create(
             Location.Create(uint.Parse([cleanedStartingLocation[0]]), uint.Parse([cleanedStartingLocation[1]])),
@@ -81,7 +81,7 @@ public static class Parser
         var finalRobotState = RobotState.Create(
             Location.Create(uint.Parse([cleanedEndLocation[0]]), uint.Parse([cleanedEndLocation[1]])),
             cleanedEndLocation[2].ToDirection());
-        return Valid(RobotInstructions.Create(startingRobotState, finalRobotState, instructions));
+        return Entity.Valid(RobotInstructions.Create(startingRobotState, finalRobotState, instructions));
     }
 
     private static ValueObject<Obstacle[]> ParseObstacles(string[] fileContents, int index)

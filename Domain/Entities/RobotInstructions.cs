@@ -1,4 +1,6 @@
-﻿namespace Domain.Primitives;
+﻿using Domain.Primitives;
+
+namespace Domain.Entities;
 
 public record RobotInstructions
 {

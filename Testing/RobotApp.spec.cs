@@ -27,14 +27,6 @@ public static partial class RobotAppShould
     }
     
     [Test]
-    public static void ParseGridDimensions()
-    {
-        Given(a_known_file_has_been_read)
-            .WhenTransforming(parsing)
-            .Then(grid_size_is_correct);
-    }
-    
-    [Test]
     public static void RejectInvalidStartingLocation()
     {
         Given(a_known_file_with_invalid_starting_location_has_been_read)

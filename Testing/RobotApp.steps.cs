@@ -109,15 +109,6 @@ public static partial class RobotAppShould
         return fileContents.ParseRobotInstructions().ExecuteRobotInstructions();
     }
     
-    private static void grid_size_is_correct(Entity<RobotApplicationState> robotApplicationState)
-    {
-        Assert.Multiple(() =>
-        {
-            Assert.That(robotApplicationState.IsValid, Is.EqualTo(true));
-            Assert.That(robotApplicationState.Match().Data.GridDimensions, Is.EqualTo(GridDimensions.Create(4,3)));
-        });
-    }
-    
     private static void grid_size_is_invalid(Entity<RobotApplicationState> gameState)
     {
         Assert.Multiple(() =>

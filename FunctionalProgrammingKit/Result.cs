@@ -19,4 +19,6 @@ public static class ResultExtensions
     {
         return result.Success ? Entity<T>.Valid(result.Data) : Entity<T>.Invalid(result.Errors.ToArray());
     }
+    public static Result<T> ValidResult<T>(T v) => new(v);
+    public static Result<T> InvalidResult<T>(Error[] errors) => new(errors);
 }

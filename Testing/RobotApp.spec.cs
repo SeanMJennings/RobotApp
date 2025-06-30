@@ -57,4 +57,12 @@ public static partial class RobotAppShould
             .WhenTransforming(parsing)
             .Then(ending_location_is_invalid);
     }
+    
+    [Test]
+    public static void CalculateSuccessForValidInstructions()
+    {
+        Given(a_known_file_has_been_read)
+            .WhenTransforming(calculating_instruction_results_for_first_sample)
+            .Then(success_is_calculated_for_first_robot_in_first_sample);
+    }
 }

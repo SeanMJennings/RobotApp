@@ -17,7 +17,7 @@ public static class Parser
     {
         if (fileContents.Failed) return Entity<RobotApplicationState>.Invalid(fileContents.Errors);
         var gridDimensions = ParseGridDimensions(fileContents.Data);
-        var instructions = ParseRobotInstructions(fileContents.Data, 1);
+        var instructions = ParseAllRobotInstructions(fileContents.Data, 1);
         return RobotApplicationState.Create(gridDimensions, instructions);
     }
 
@@ -31,7 +31,7 @@ public static class Parser
         return Valid(GridDimensions.Create(uint.Parse(dimensions[0]), uint.Parse(dimensions[1])));
     }
 
-    private static ValueObject<RobotInstructions[]> ParseRobotInstructions(string[] fileContents, int index)
+    private static ValueObject<RobotInstructions[]> ParseAllRobotInstructions(string[] fileContents, int index)
     {
         if (index >= fileContents.Length) return Valid<RobotInstructions[]>([]);
 
@@ -39,7 +39,7 @@ public static class Parser
         for (var i = index; i < index + 3 && i < fileContents.Length; i++) currentBatch.Add(fileContents[i]);
         
         var robotInstructions = ParseRobotInstructions(currentBatch.ToArray());
-        var remainingInstructions = ParseRobotInstructions(fileContents, index + 3);
+        var remainingInstructions = ParseAllRobotInstructions(fileContents, index + 3);
         
         return robotInstructions.Match(
             Invalid: Invalid<RobotInstructions[]>,

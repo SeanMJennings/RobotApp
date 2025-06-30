@@ -1,7 +1,4 @@
-﻿using Domain.Entities;
-using FunctionalProgrammingKit;
-
-namespace Domain.Primitives;
+﻿namespace Domain.Primitives;
 
 public record RobotInstructions
 {
@@ -20,10 +17,11 @@ public record RobotInstructions
     }
 }
 
-public static class RobotInstructionsExtensions
+public static class RobotInstructionsBehaviour
 {
-    public static ValueObject<RobotInstructions[]> Create(this RobotInstructions[] robotInstructions)
+    public static RobotInstructionsResult ExecuteRobotInstructions(this RobotInstructions robotInstructions)
     {
-        return Valid(robotInstructions);
-    }  
+        var currentState = robotInstructions.Instructions.Aggregate(robotInstructions.StartingRobotState, (current, instruction) => current.Move(instruction));
+        return RobotInstructionsResult.Create(RobotInstructionsResultType.Success, currentState);
+    }
 }

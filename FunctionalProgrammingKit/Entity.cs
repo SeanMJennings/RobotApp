@@ -20,9 +20,13 @@ public record Entity<T>
     {
         return IsValid ? Valid(_value!) : Invalid(_errors.ToArray()!);
     }
-    public ReturnWrapper<T> Match()
+    public Result<R> MatchResult<R>(Func<T, R> Valid)
     {
-        return IsValid ? ValidWrapper(_value!) : InvalidWrapper<T>(_errors.ToArray());
+        return IsValid ? ValidResult(Valid(_value!)) : InvalidResult<R>(_errors.ToArray());
+    }
+    public Result<T> Match()
+    {
+        return IsValid ? ValidResult(_value!) : InvalidResult<T>(_errors.ToArray());
     }
 }
 

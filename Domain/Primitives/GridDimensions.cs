@@ -9,11 +9,3 @@ public readonly record struct GridDimensions(uint Width, uint Height)
         return new GridDimensions(width, height);
     }
 }
-
-public static class GridDimensionsExtensions
-{
-    public static ValueObject<GridDimensions> Create(this GridDimensions gridDimensions)
-    {
-        return Valid(gridDimensions);
-    }  
-}

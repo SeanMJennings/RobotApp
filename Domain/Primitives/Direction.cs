@@ -17,8 +17,7 @@ public static class DirectionExtensions
             'N' => Direction.North,
             'S' => Direction.South,
             'E' => Direction.East,
-            'W' => Direction.West,
-            _ => throw new ArgumentException($"Invalid direction character: {direction}")
+            'W' => Direction.West
         };
     }
 }

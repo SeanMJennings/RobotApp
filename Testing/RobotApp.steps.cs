@@ -98,12 +98,17 @@ public static partial class RobotAppShould
         return fileContents.ParseRobotInstructions();
     }
 
+    private static Result<RobotInstructionsResult[]> calculating_instruction_results_for_first_sample(Result<string[]> fileContents)
+    {
+        return fileContents.ParseRobotInstructions().ExecuteRobotInstructions();
+    }
+    
     private static void grid_size_is_correct(Entity<RobotApplicationState> robotApplicationState)
     {
         Assert.Multiple(() =>
         {
             Assert.That(robotApplicationState.IsValid, Is.EqualTo(true));
-            Assert.That(robotApplicationState.Match().Value.GridDimensions, Is.EqualTo(GridDimensions.Create(4,3)));
+            Assert.That(robotApplicationState.Match().Data.GridDimensions, Is.EqualTo(GridDimensions.Create(4,3)));
         });
     }
     
@@ -141,5 +146,16 @@ public static partial class RobotAppShould
             Assert.That(gameState.IsValid, Is.EqualTo(false));
             Assert.That(gameState.ErrorMessage(), Is.EqualTo("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>"));
         });
-    }  
+    }
+
+    private static void success_is_calculated_for_first_robot_in_first_sample(Result<RobotInstructionsResult[]> result)
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Success, Is.EqualTo(true));
+            Assert.That(result.Data, Is.Not.Null);
+            Assert.That(result.Data[0].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.Success));
+            Assert.That(result.Data[0].RobotState, Is.EqualTo(RobotState.Create(Location.Create(1, 0), Direction.West)));
+        });
+    }
 }

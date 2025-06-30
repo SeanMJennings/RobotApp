@@ -28,3 +28,23 @@ public static class RobotApplicationStateSetters
         return robotApplicationState.SetValueObject(instructions, static (robotApplicationState, theInstructions) => robotApplicationState with { InstructionsForRobots = theInstructions });
     }
 }
+
+public static class RobotApplicationStateBehaviour
+{
+    public static Result<RobotInstructionsResult[]> ExecuteRobotInstructions(this Entity<RobotApplicationState> robotApplicationState)
+    {
+        return robotApplicationState.MatchResult<RobotInstructionsResult[]>(state => ExecuteRobotInstructions(state.InstructionsForRobots, 0));
+    }
+    
+    private static RobotInstructionsResult[] ExecuteRobotInstructions(RobotInstructions[] instructions, int index)
+    {
+        if (index >= instructions.Length) return [];
+
+        var robotInstructions = instructions[index].ExecuteRobotInstructions();
+        var remainingInstructions = ExecuteRobotInstructions(instructions, index + 1);
+        var results = new RobotInstructionsResult[remainingInstructions.Length + 1];
+        results[0] = robotInstructions;
+        remainingInstructions.CopyTo(results, 1);
+        return results;
+    }
+}

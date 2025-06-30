@@ -28,6 +28,9 @@
       <Compile Update="RobotApp.steps.cs">
         <DependentUpon>RobotApp.spec.cs</DependentUpon>
       </Compile>
+      <Compile Update="Acceptance.steps.cs">
+        <DependentUpon>Acceptance.spec.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

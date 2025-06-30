@@ -10,7 +10,6 @@ public static partial class RobotAppShould
 {
     private const string UnknownFile = "unknown_file.txt";
     private const string SampleFile = "Sample.txt";
-    private const string Sample1File = "Sample1.txt";
     private const string InvalidGridSizeText = "GRID 43";
     private const string InvalidLocationText = """
                                                GRID 4X3
@@ -78,11 +77,6 @@ public static partial class RobotAppShould
     private static Result<string[]> sample_file_has_been_read()
     {
         return SampleFile.GetCleanedFileContents();
-    }
-
-    private static Result<string[]> sample_1_file_has_been_read()
-    {
-        return Sample1File.GetCleanedFileContents();
     }
 
     private static void file_is_found(Result<string[]> result)
@@ -173,44 +167,6 @@ public static partial class RobotAppShould
         {
             Assert.That(result.Success, Is.EqualTo(true));
             Assert.That(result.Data[2].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.OutOfBounds));
-        });
-        return result;
-    }
-    
-    private static Result<RobotInstructionsResult[]> calculating_instruction_results_for_sample_1_file(Result<string[]> fileContents)
-    {
-        return fileContents.ParseRobotInstructions().ExecuteRobotInstructions();
-    }
-    
-    private static Result<RobotInstructionsResult[]> first_robot_in_sample_1_file_is_successful(Result<RobotInstructionsResult[]> result)
-    {
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.Success, Is.EqualTo(true));
-            Assert.That(result.Data[0].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.Success));
-            Assert.That(result.Data[0].RobotState, Is.EqualTo(RobotState.Create(Location.Create(1, 1), Direction.East)));
-        });
-        return result;
-    }    
-    
-    private static Result<RobotInstructionsResult[]> second_robot_in_sample_1_file_is_successful(Result<RobotInstructionsResult[]> result)
-    {
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.Success, Is.EqualTo(true));
-            Assert.That(result.Data[1].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.Success));
-            Assert.That(result.Data[1].RobotState, Is.EqualTo(RobotState.Create(Location.Create(3, 3), Direction.North)));
-        });
-        return result;
-    }    
-    
-    private static Result<RobotInstructionsResult[]> third_robot_in_sample_1_file_is_successful(Result<RobotInstructionsResult[]> result)
-    {
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.Success, Is.EqualTo(true));
-            Assert.That(result.Data[2].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.Success));
-            Assert.That(result.Data[2].RobotState, Is.EqualTo(RobotState.Create(Location.Create(2, 4), Direction.South)));
         });
         return result;
     }

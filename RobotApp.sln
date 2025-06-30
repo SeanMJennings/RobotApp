@@ -4,6 +4,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{78
 	ProjectSection(SolutionItems) = preProject
 		Instructions.txt = Instructions.txt
 		.github\workflows\BuildAndTest.yaml = .github\workflows\BuildAndTest.yaml
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{FF692B86-81E0-4B68-BFE5-59E4A4592208}"

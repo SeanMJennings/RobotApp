@@ -5,7 +5,7 @@ public record RobotInstructions
     public required RobotState StartingRobotState { get; init; }
     public required RobotState FinalRobotState { get; init; }
     public required Movement[] Instructions { get; init; }
-    public required Obstacle[] Obstacles { get; init; }
+    public required Obstacle[] Obstacles { private get; init; }
 
     public static RobotInstructions Create(RobotState startingRobotState, RobotState finalRobotState, Movement[] instructions, Obstacle[]? obstacles = null)
     {

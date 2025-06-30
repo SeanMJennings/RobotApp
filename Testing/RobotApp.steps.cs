@@ -75,9 +75,9 @@ public static partial class RobotAppShould
         return new Result<string[]>(InvalidEndingLocationText.Split('\n'));
     }
 
-    private static Result<string[]> a_known_file_has_been_read()
+    private static Result<string[]> sample_file_has_been_read()
     {
-        return a_known_file().GetCleanedFileContents();
+        return SampleFile.GetCleanedFileContents();
     }
 
     private static Result<string[]> sample_1_file_has_been_read()
@@ -145,7 +145,7 @@ public static partial class RobotAppShould
         });
     }
 
-    private static void success_is_calculated_for_first_robot_in_first_sample(Result<RobotInstructionsResult[]> result)
+    private static Result<RobotInstructionsResult[]> success_is_calculated_for_first_robot_in_sample(Result<RobotInstructionsResult[]> result)
     {
         Assert.Multiple(() =>
         {
@@ -153,9 +153,10 @@ public static partial class RobotAppShould
             Assert.That(result.Data[0].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.Success));
             Assert.That(result.Data[0].RobotState, Is.EqualTo(RobotState.Create(Location.Create(1, 0), Direction.West)));
         });
+        return result;
     }
     
-    private static void failure_is_calculated_for_second_robot_in_first_sample(Result<RobotInstructionsResult[]> result)
+    private static Result<RobotInstructionsResult[]> failure_is_calculated_for_second_robot_in_sample(Result<RobotInstructionsResult[]> result)
     {
         Assert.Multiple(() =>
         {
@@ -163,15 +164,17 @@ public static partial class RobotAppShould
             Assert.That(result.Data[1].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.Failure));
             Assert.That(result.Data[1].RobotState, Is.EqualTo(RobotState.Create(Location.Create(0, 0), Direction.West)));
         });
+        return result;
     }    
     
-    private static void out_of_bounds_is_calculated_for_third_robot_in_first_sample(Result<RobotInstructionsResult[]> result)
+    private static Result<RobotInstructionsResult[]> out_of_bounds_is_calculated_for_third_robot_in_sample(Result<RobotInstructionsResult[]> result)
     {
         Assert.Multiple(() =>
         {
             Assert.That(result.Success, Is.EqualTo(true));
             Assert.That(result.Data[2].RobotInstructionsResultType, Is.EqualTo(RobotInstructionsResultType.OutOfBounds));
         });
+        return result;
     }
     
     private static Result<RobotInstructionsResult[]> calculating_instruction_results_for_sample_1_file(Result<string[]> fileContents)

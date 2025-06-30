@@ -53,25 +53,35 @@ public static partial class RobotAppShould
     [Test]
     public static void CalculateSuccessForValidInstructions()
     {
-        Given(a_known_file_has_been_read)
+        Given(sample_file_has_been_read)
             .WhenTransforming(calculating_instruction_results_for_sample_file)
-            .Then(success_is_calculated_for_first_robot_in_first_sample);
+            .Then(success_is_calculated_for_first_robot_in_sample);
     }
     
     [Test]
     public static void CalculateFailureForIncorrectEndLocation()
     {
-        Given(a_known_file_has_been_read)
+        Given(sample_file_has_been_read)
             .WhenTransforming(calculating_instruction_results_for_sample_file)
-            .Then(failure_is_calculated_for_second_robot_in_first_sample);
+            .Then(failure_is_calculated_for_second_robot_in_sample);
     }
     
     [Test]
     public static void CalculateOutOfBoundsForInvalidMovements()
     {
-        Given(a_known_file_has_been_read)
+        Given(sample_file_has_been_read)
             .WhenTransforming(calculating_instruction_results_for_sample_file)
-            .Then(out_of_bounds_is_calculated_for_third_robot_in_first_sample);
+            .Then(out_of_bounds_is_calculated_for_third_robot_in_sample);
+    }
+    
+    [Test]
+    public static void CorrectlyCalculatesAllOfSampleFile()
+    {
+        Given(sample_file_has_been_read)
+            .WhenTransforming(calculating_instruction_results_for_sample_1_file)
+            .Then(success_is_calculated_for_first_robot_in_sample)
+            .And(failure_is_calculated_for_second_robot_in_sample)
+            .And(out_of_bounds_is_calculated_for_third_robot_in_sample);
     }
 
     [Test]

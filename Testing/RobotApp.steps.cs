@@ -51,7 +51,7 @@ public static partial class RobotAppShould
 
     private static Result<string[]> looking_for_file(string path)
     {
-        return path.GetCleanedFileContents();
+        return path.ReadAllLines();
     }
 
     private static void file_is_not_found(Result<string[]> result)
@@ -100,7 +100,7 @@ public static partial class RobotAppShould
     
     private static Result<string[]> sample_file_has_been_read()
     {
-        return SampleFile.GetCleanedFileContents();
+        return SampleFile.ReadAllLines();
     }
 
     private static void file_is_found(Result<string[]> result)
@@ -141,7 +141,7 @@ public static partial class RobotAppShould
         Assert.Multiple(() =>
         {
             Assert.That(gameState.IsValid, Is.EqualTo(false));
-            Assert.That(gameState.ErrorMessage().Contains("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>"), Is.True);
+            Assert.That(gameState.ErrorMessage().Contains("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W"), Is.True);
         });
     }
     
@@ -159,7 +159,7 @@ public static partial class RobotAppShould
         Assert.Multiple(() =>
         {
             Assert.That(gameState.IsValid, Is.EqualTo(false));
-            Assert.That(gameState.ErrorMessage(), Is.EqualTo("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>"));
+            Assert.That(gameState.ErrorMessage(), Is.EqualTo("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W"));
         });
     }    
     

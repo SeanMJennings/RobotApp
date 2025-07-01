@@ -45,6 +45,12 @@ public static class RobotStateBehaviour
             },
             _ => robotState
         };
+        return CalculateRobotState(gridDimensions, obstacles, newRobotState);
+    }
+
+    private static (RobotState RobotState, bool OutOfBounds, bool crashed) CalculateRobotState(
+        GridDimensions gridDimensions, Obstacle[] obstacles, RobotState newRobotState)
+    {
         var outOfBounds = IsRobotOutOfBounds(gridDimensions, newRobotState);
         if (outOfBounds) return (newRobotState, true, false);
         var hasRobotCrashed = HasRobotCrashedIntoObstacle(newRobotState, obstacles);
@@ -71,10 +77,7 @@ public static class RobotStateBehaviour
             Direction.West => robotState with { Direction = Direction.North },
             _ => robotState
         };
-        var outOfBounds = IsRobotOutOfBounds(gridDimensions, newRobotState);
-        if (outOfBounds) return (newRobotState, true, false);
-        var hasRobotCrashed = HasRobotCrashedIntoObstacle(newRobotState, obstacles);
-        return hasRobotCrashed ? (newRobotState, false, true) : (newRobotState, false, false);
+        return CalculateRobotState(gridDimensions, obstacles, newRobotState);
     }
     
     private static (RobotState RobotState, bool OutOfBounds, bool crashed) Left(this RobotState robotState, GridDimensions gridDimensions, Obstacle[] obstacles)
@@ -87,9 +90,6 @@ public static class RobotStateBehaviour
             Direction.West => robotState with { Direction = Direction.South },
             _ => robotState
         };
-        var outOfBounds = IsRobotOutOfBounds(gridDimensions, newRobotState);
-        if (outOfBounds) return (newRobotState, true, false);
-        var hasRobotCrashed = HasRobotCrashedIntoObstacle(newRobotState, obstacles);
-        return hasRobotCrashed ? (newRobotState, false, true) : (newRobotState, false, false);
+        return CalculateRobotState(gridDimensions, obstacles, newRobotState);
     }
 }

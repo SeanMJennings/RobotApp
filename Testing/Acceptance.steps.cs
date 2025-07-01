@@ -13,17 +13,17 @@ public static partial class Acceptance
     
     private static Result<string[]> sample_file_has_been_read()
     {
-        return SampleFile.GetCleanedFileContents();
+        return SampleFile.ReadAllLines();
     }
 
     private static Result<string[]> sample_1_file_has_been_read()
     {
-        return Sample1File.GetCleanedFileContents();
+        return Sample1File.ReadAllLines();
     }    
     
     private static Result<string[]> sample_2_file_has_been_read()
     {
-        return Sample2File.GetCleanedFileContents();
+        return Sample2File.ReadAllLines();
     }
     
     private static Result<RobotInstructionsResult[]> calculating_instruction_results(Result<string[]> fileContents)

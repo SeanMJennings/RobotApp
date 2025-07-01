@@ -64,7 +64,7 @@ public static class Parser
     {
         var cleanedStartingLocation = fileContents[0].CleanFileLine();
         if (!Regex.IsMatch(cleanedStartingLocation, ValidLocationPattern))
-            return Entity.Invalid<RobotInstructions>("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>");
+            return Entity.Invalid<RobotInstructions>("Starting location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W");
         
         var cleanedInstructions = fileContents[1].CleanFileLine();
         if (!Regex.IsMatch(cleanedInstructions, ValidInstructionsPattern))
@@ -72,7 +72,7 @@ public static class Parser
         
         var cleanedEndLocation = fileContents[2].CleanFileLine();
         if (!Regex.IsMatch(cleanedEndLocation, ValidLocationPattern))
-            return Entity.Invalid<RobotInstructions>("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W>");
+            return Entity.Invalid<RobotInstructions>("Ending location is invalid. Expected format: <x> <y> <direction> where direction is N, E, S, W");
         
         var startingRobotState = RobotState.Create(
             Location.Create(uint.Parse([cleanedStartingLocation[0]]), uint.Parse([cleanedStartingLocation[1]])),
